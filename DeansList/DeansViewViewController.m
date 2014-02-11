@@ -35,8 +35,8 @@
      
      ********************************************/
     
-	self.nyu = [[Course alloc] init];
-    NSLog(@"%@", self.nyu.universityName);
+	self.nyu = [[University alloc] init];
+    NSLog(@"%@", self.nyu);
     
     UniversityDepartments * compSciDept = [UniversityDepartments new];
     compSciDept.departmentName = @"Computer Science Department";
@@ -49,23 +49,15 @@
     UniversityDepartments * chemDept = [UniversityDepartments new];
     chemDept.departmentName = @"Chemistry Department";
     [self.nyu addDepartment:chemDept];
-
-#warning would like to create a custom init for Course class
-    Course * compSci101 = [Course new];
-    [compSci101 changeCourseName: @"Intro to ObjC"];
+    
+    Course * compSci101 = [[Course alloc] initCourseWithName:@"Intro to ObjC"];
     [compSciDept addCoursesObject:compSci101];
     
-    Course * compSci201 = [Course new];
-    [compSci201 changeCourseName:@"Data Structures"];
+    Course * compSci201 = [[Course alloc] initCourseWithName:@"Data Structures"];
     [compSciDept addCoursesObject:compSci201];
     
-    Course * compSci202 = [Course new];
-    [compSci202 changeCourseName:@"Into to Java"];
+    Course * compSci202 = [[Course alloc] initCourseWithName:@"Into to Java"];
     [compSciDept addCoursesObject:compSci202];
-    
-    Course * bio101 = [Course new];
-    [bio101 changeCourseName:@"Intro to Biology"];
-    [bioDept addCoursesObject:bio101];
     
     Course * chem101 = [Course new];
     [chem101 changeCourseName:@"Molecular Chemistry"];
@@ -81,8 +73,12 @@
     Staff * eWang = [[Staff alloc] initWithName:@"Dr. Eric Wang" SSN:@"999-999-9999" andDOB:NULL];
     Staff * pPark = [[Staff alloc] initWithName:@"Dr. Paul Park" SSN:@"999-999-9999" andDOB:NULL];
     Staff * lTur = [[Staff alloc] initWithName:@"Dr. Louis Tur" SSN:@"999-999-9999" andDOB:NULL];
-
     
+    //test of custom init's in Course Class
+    Course * bio101 = [[Course alloc] initCourseWithName:@"Intro to Biology" andProfessor:pPark];
+    [bioDept addCoursesObject:bio101];
+    
+    //To Do: have this information imported from file
     Student * jNorris = [[Student alloc] initWithName:@"Jim Norris" SSN:@"999-999-9999" andDOB:NULL];
     Student * sKoonin = [[Student alloc] initWithName:@"Shawn Koonin" SSN:@"999-999-9999" andDOB:NULL];
     Student * dDaniel = [[Student alloc] initWithName:@"Devin O' Daniel" SSN:@"999-999-9999" andDOB:NULL];
@@ -90,7 +86,7 @@
     Student * tHoughton = [[Student alloc] initWithName:@"Tempest Houghton" SSN:@"999-999-9999" andDOB:NULL];
     Student * jUnderwood = [[Student alloc] initWithName:@"James Underwood" SSN:@"999-999-9999" andDOB:NULL];
     
-    //not yet implemented fully
+    //not yet implemented
     jNorris.fullTime = TRUE;
     sKoonin.fullTime = TRUE;
     dDaniel.fullTime = FALSE;
@@ -98,60 +94,62 @@
     tHoughton.fullTime = FALSE;
     jUnderwood.fullTime = TRUE;
     
-    // created this method to make the courses class aware of the
-    // student objects
     [self.nyu enrollStudent:@[jNorris, sKoonin, dDaniel, dWallace, tHoughton, jUnderwood]];
-#warning theHireStaff method needs to be updated
     [self.nyu hireStaff:@[pPark, eWang, lTur]];
     
     //adding teachers to courses, for simplicity every class in a given department has the same teachin staff
-    for (Course * crs in compSciDept.courses) {
-        [crs setTeacher:pPark];
-        [crs addAssistantTeachers:@[lTur, eWang]];
-        [self.nyu addCourseID:crs withName:crs.courseName];
+    
+    for (UniversityDepartments * depts in self.nyu.departments) {
+        //runs through departments
+        for (Course * crs in depts.courses) {
+            //checks for what dept to assign a teacher
+            if ( [depts isEqual:compSciDept] ){
+                [crs setTeacher:pPark];
+                [crs addAssistantTeachers:@[lTur, eWang]];
+                //[self.nyu addCourseID:crs withName:crs.courseName];
+            }else if ([depts isEqual:bioDept]){
+                [crs setTeacher:lTur];
+                //[self.nyu addCourseID:crs withName:crs.courseName];
+            }else if ( [depts isEqual:chemDept] ){
+                [crs setTeacher:eWang];
+                //[self.nyu addCourseID:crs withName:crs.courseName];
+            }else{
+                NSLog(@"Unknown Department Found. Cannot Add %@", crs);
+            }
+        }
     }
-    for (Course * crs in bioDept.courses) {
-        [crs setTeacher:lTur];
-        [self.nyu addCourseID:crs withName:crs.courseName];
-    }
-    for (Course * crs in chemDept.courses) {
-        [crs setTeacher:eWang];
-        [self.nyu addCourseID:crs withName:crs.courseName];
-    }
+    
+    [compSci101 addStudentsUsingId:@[jNorris, jUnderwood, dWallace, dDaniel]];
+    [compSci201 addStudentsUsingId:tHoughton];
+    [compSci202 addStudentsUsingId:@[jNorris, dDaniel, dWallace, sKoonin]];
+    
+    
+    NSLog(@"%@ employs: %@", self.nyu, self.nyu.hiredStaff);
+    NSLog(@"%@ enrolled the following students: %@", self.nyu, self.nyu.enrolledStudents);
+    NSLog(@"%@ has the following departments: %@", self.nyu, self.nyu.departments);
+    
+    NSLog(@"The %@ has the following Courses: %@", compSciDept, compSciDept.courses);
+    NSLog(@"The %@ has the following Courses: %@", bioDept, bioDept.courses);
+    NSLog(@"The %@ has the following Courses: %@", chemDept, chemDept.courses);
+    
+    NSLog(@"%@ enrolled students: %@", compSci101, compSci101.students);
+    NSLog(@"%@ enrolled students: %@", compSci201, compSci201.students);
+    NSLog(@"%@ enrolled students: %@", compSci202, compSci202.students);
+    
+    NSLog(@"%@ is taught by %@", compSci101, compSci101.teacher);
+    NSLog(@"%@ is taught by %@", bio101, bio101.teacher);
+    NSLog(@"%@ is taught by %@", chem101, chem101.teacher);
+    
+    NSLog(@"%@ is enrolled in: %@", jNorris, jNorris.associatedCourses);
+    NSLog(@"%@ is enrolled in: %@", dWallace, dWallace.associatedCourses);
+    NSLog(@"%@ is enrolled in: %@", sKoonin, sKoonin.associatedCourses);
+     
 
+    NSLog(@"%@ teaches the following courses: %@", pPark, pPark.associatedCourses);
+    NSLog(@"%@ teaches the following courses: %@", lTur, lTur.associatedCourses);
     
-    
-    /*********************************************
-     
-     Tests
-     
-     // add these to test, but updated UI will be able to do this
-    //[compSci101 addStudentsObject:jNorris];
-    //[compSci101 addStudentsObject:dDaniel];
-    //[compSci101 addStudentsObject:sKoonin];
-     
-    //Basic tests
-     //
-     //
-    NSLog(@"Departments: %@", nyu.departments);
-    NSLog(@"Courses for Comp Sci Dept: %@", compSciDept.courses);
-    NSLog(@"Professor: %@, Students: %@", compSci101.teacher, compSci101.students);
-    NSLog(@"Assistant Teachers: %@", compSci101.assistantTeachers);
-    NSLog(@"%@", compSciDept.universityName);
-     
-    //add/remove students from NYU object and courses object
-     //
-     //
-     
-    NSLog(@"Enrolled at NYU: %@", nyu.enrolledStudents);
-    NSLog(@"In the Comp Sci Course: %@", compSci101.students);
-    [compSci101 dropStudent:jNorris];
-    NSLog(@"In the Comp Sci Course after a drop: %@", compSci101.students);
-    [compSci101 dropStudent:sKoonin];
-    NSLog(@"In the Comp Sci Course after a drop: %@", compSci101.students);
-    
-    NSLog(@"But, the students are still enrolled at NYU: %@", nyu.enrolledStudents);
-    ********************************************/
+    NSLog(@"The %@ course has the following assistant teachers:%@", compSci201, compSci201.assistantTeachers);
+
 }
 
 - (void)didReceiveMemoryWarning

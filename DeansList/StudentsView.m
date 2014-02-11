@@ -22,10 +22,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
-        //is this actually being called? No, right?
-        _students = [NSArray array];
-        _courses = [NSDictionary dictionary];
     }
     return self;
 }
@@ -118,6 +114,7 @@
     [self.coursesTable setDelegate:self];
     self.coursesTable.sectionFooterHeight = 0.0;
     
+    //not implemented
     justCourseNames = [NSArray arrayWithArray:[self.courses allKeys]];
 }
 

@@ -26,8 +26,11 @@
 @property (strong, nonatomic) NSMutableArray * assistantTeachers;
 
 - (NSString *)description;
+- (id) initCourseWithName: (NSString *) name;
+- (id) initCourseWithName:(NSString *)name andProfessor: (Staff *) prof;
 - (void) changeCourseName: (NSString *) newName;
 - (void) addStudentsObject:(Student *) studentName;
+- (void) addStudentsUsingId: (id) students;
 - (void) dropStudent: (Student *) studentName;
 - (void) changeTeacher: (Staff *) newTeacher;
 

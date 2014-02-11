@@ -11,17 +11,13 @@
 @implementation Staff
 
 -(void)assignToCourse:(Course *)courseName {
-    
-    if (!_coursesTaught) {
-        _coursesTaught = [NSMutableArray array];
-    }
-    
-    [_coursesTaught addObject:courseName];
+    [self.associatedCourses addObject:courseName];
+
 }
 
 -(NSArray *)showCoursesTaught{
     
 #warning need to add course!=nil check here
-    return _coursesTaught;
+    return self.associatedCourses;
 }
 @end

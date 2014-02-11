@@ -11,8 +11,6 @@
 
 @interface Staff : Person
 
-@property (strong, nonatomic) NSMutableArray * coursesTaught;
-
 - (void) assignToCourse: (Course *) courseName;
 - (NSArray *) showCoursesTaught;
 

@@ -23,6 +23,9 @@
         _name = theName;
         _dateOfBirth = theDOB;
         _SSN = theSSN;
+        if (!_associatedCourses) {
+            _associatedCourses = [NSMutableArray array];
+        }
     }
     return self;
 }

@@ -14,6 +14,7 @@
 {
     self = [super init];
     if (self) {
+        // _courses only needed in a custom setter/getter?
         _courses = [NSMutableArray array];
         _departmentHead = @"None Set";
         _departmentName = @"None Set";
@@ -22,7 +23,7 @@
 }
 
 - (NSString *)description {
-    return _departmentName;
+    return self.departmentName;
 }
 -(void)verifyCourse:(NSString *)departmentName{
     
@@ -41,7 +42,7 @@
 }
 
 - (void)addCoursesObject:(University *)newCourse{
-    [_courses addObject:newCourse];
+    [self.courses addObject:newCourse];
 }
 
 
